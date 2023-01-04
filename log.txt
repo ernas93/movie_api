@@ -16,3 +16,15 @@ Timestamp: Mon Jan 02 2023 23:59:10 GMT+0100 (Central European Standard Time)
 URL: /favicon.ico
 Timestamp: Mon Jan 02 2023 23:59:10 GMT+0100 (Central European Standard Time)
 
+URL: /documentat
+Timestamp: Tue Jan 03 2023 11:40:29 GMT+0100 (Central European Standard Time)
+
+URL: /favicon.ico
+Timestamp: Tue Jan 03 2023 11:40:29 GMT+0100 (Central European Standard Time)
+
+URL: /documentation
+Timestamp: Tue Jan 03 2023 11:40:36 GMT+0100 (Central European Standard Time)
+
+URL: /favicon.ico
+Timestamp: Tue Jan 03 2023 11:40:36 GMT+0100 (Central European Standard Time)
+
