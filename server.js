@@ -68,7 +68,7 @@ app.get('/movies', (req, res) => {
 
 // 2. endpoint return movie by title; READ
 app.get('/movies/:title', (req, res) => {
-    const { title } =req.params;
+    const { title } = req.params;
     const movie = movies.find( movie => movie.Title === title);
 
     if (movie) {
@@ -81,7 +81,7 @@ app.get('/movies/:title', (req, res) => {
 // 3. endpoint get genre by genre name; READ
 app.get('/movies/genre/:genreName', (req, res) => {
     const { genreName } = req.params;
-    const genre = movies.find( movie => movie.Genre.Name === genreName).Genre;
+    const genre = movies.find( movie => movie.Genre.Name === genreName)?.Genre;
 
     if (genre) {
         res.status(200).json(genre);
@@ -145,10 +145,10 @@ app.put('/users/:id/movies/:movieTitle', (req, res) => {
 });
 
 // 8. endpoint allow user to delete a movie from their favorites list, DELETE
-app.delete('users/:id/:movieTitle', (req, res) => {
+app.delete('/users/:id/movies/:movieTitle', (req, res) => {
     const { id, movieTitle } = req.params;
 
-    let user = user.find( user => user.id == id);
+    let user = users.find( user => user.id == id);
 
     if (user) {
         user.favoriteMovies = user.favoriteMovies.filter( title => title !== movieTitle);
@@ -159,10 +159,10 @@ app.delete('users/:id/:movieTitle', (req, res) => {
 });
 
 // 9. endpoint allow existing users to deregister, DELETE
-app.delete('users/:id/', (req, res) => {
+app.delete('/users/:id/', (req, res) => {
     const { id } = req.params;
 
-    let user = user.find( user => user.id == id);
+    let user = users.find( user => user.id == id);
 
     if (user) {
         users = users.filter( user => user.id != id);
