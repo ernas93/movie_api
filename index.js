@@ -40,9 +40,10 @@ let topTenMovies = [
 
 // the GET requests
 app.get('/', (req, res) => {
-    res.send('Welcome to this unusual movie API, containing best worst movies created! But for now I am just gonna name some of my favourite movies.')
+    res.send('Welcome to this movie API! Here you can find my top 10 fav movies!')
 });
 
+// returns array top movies
 app.get('/movies', (req, res) => {
     res.json(topTenMovies);
 });

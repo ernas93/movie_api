@@ -120,7 +120,7 @@ app.post('/users', (req, res) => {
 app.put('/users/:id/name/:name', (req, res) => {
     const { id, name } = req.params;
 
-    let user = users.find( user => user.id == id );
+    let user = users.find( user => user.id == id);
 
     if (user) {
         user.name = name;
