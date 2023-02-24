@@ -216,15 +216,27 @@ app.put('/users/:Username', (req, res) => {
 });
 
 // 7. endpoint allow user to add a favorite movie to their list of favorites, UPDATE
-app.put('/users/:favoriteMovies', (req, res) => {
-    Users.findOneAndUpdate({Username: req.params.Username})
+// UPDATE LATER
+app.put('/users/:Username/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({Username: req.params.Username}, {
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true },
+    (err, updatedUser) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
+    });
 
-    if (user) {
-        user.favoriteMovies.push(movieTitle);
-        res.status(200).send(`${movieTitle} has been added to favorites from the user ${id}.`)
-    } else {
-        res.status(400).send('no such user found')
-    }
+    // if (updatedUser) {
+    //     updatedUser.favoriteMovies.push(movieTitle);
+    //     res.status(200).send(`${movieTitle} has been added to favorites from the user ${id}.`)
+    // } else {
+    //     res.status(400).send('no such user found')
+    // }
 });
 
 // 8. endpoint allow user to delete a movie from their favorites list, DELETE
