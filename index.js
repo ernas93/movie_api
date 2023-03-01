@@ -115,7 +115,7 @@ app.put('/users/:Username', (req, res) => {
     if (!req.body.Username) {
         res.status(400).send('Error: missing body params');
     }
-
+    
     Users.findOneAndUpdate({ Username: req.params.Username }, 
         {
             $set: {
@@ -131,7 +131,7 @@ app.put('/users/:Username', (req, res) => {
                 console.error(err);
                 res.status(500).send('Error: ' + err);
             } else if (!updatedUser) {
-                res.status(400).send('No such found.');
+                res.status(400).send(req.params.Username + ' was not found.');
             } else {
                 res.json(updatedUser);
             }
@@ -142,7 +142,6 @@ app.put('/users/:Username', (req, res) => {
 // 7. endpoint allow user to add a favorite movie to their list of favorites, UPDATE
 // UPDATE LATER
 app.put('/users/:Username/:MovieId', (req, res) => {
-    console.log('hi')
     Users.findOneAndUpdate(
         { Username: req.params.Username }, 
         { $push: { FavoriteMovies: req.params.MovieId }},
@@ -151,6 +150,8 @@ app.put('/users/:Username/:MovieId', (req, res) => {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error: ' + err);
+            } else if (!updatedUser) {
+                res.status(400).send(req.params.Username + ' was not found.');
             } else {
                 res.json(updatedUser);
             }
