@@ -16,61 +16,6 @@ mongoose.connect('mongodb://localhost:27017/movieappdb', {
 
 app.use(bodyParser.json());
 
-// let users = [
-//     {
-//         name: "John Blue",
-//         id: 1,
-//         favoriteMovies: [],
-//     },
-//     {
-//         name: "Kevin McNulty",
-//         id: 2,
-//         favoriteMovies: ["Home Alone"],
-//     },
-// ]
-
-// let movies = [
-//     {
-//         "Title": "Home Alone",
-//         "Description": "some funny family movie from the 90s",
-//         "Genre": {
-//             "Name": "Comedy",
-//             "Description": "Comedies are movie that 90% of the time don't make you laugh, but they can be funny.",
-//         },
-//         "Director": "Chris Columbus",
-//     },
-//     {
-//         "Title": "Godfather part II",
-//         "Description": "It's an epic crime film from 1974, which is partially based by the novel The Godfather by Mario Puzo.",
-//         "Genre": {
-//             "Name": "Crime and Drama",
-//             "Description": "Crime drama is a sub-genre, that focuses on crimes and etc."
-//         },
-//         "Director": "Francis Ford Coppola",
-//     }
-// ];
-
-// let directors = [
-//     {
-//         "Name": "Chris Columbus",
-//         "Bio": "some bio",
-//         "BirthYear": 1950,
-//         "DeathYear": null,
-//     },
-//     {
-//         "Name": "Francis Ford Coppola",
-//         "Bio": "some bio about coppola",
-//         "BirthYear": 1940,
-//         "DeathYear": null,
-//     },
-//     {
-//         "Name": "Stanley Kubrick",
-//         "Bio": "some bio about Kubrick",
-//         "BirthYear": 1936,
-//         "DeathYear": 2004,
-//     },
-// ];
-
 
 // 1. endpoint return all movies; READ
 app.get('/movies', (req, res) => {
@@ -118,8 +63,6 @@ app.get('/movies/genre/:genreName', (req, res) => {
 
 // 4. endpoint director; READ
 app.get('/directors/:directorName', (req, res) => {
-    //const { directorName } = req.params;
-    //const director = directors.find( director => director.Name === directorName);
     Movies.findOne({'Director.Name': req.params.directorName})
     .then((movie) => {
         if (movie) {
@@ -136,17 +79,6 @@ app.get('/directors/:directorName', (req, res) => {
 
 // 5. endpoint add new user, CREATE
 app.post('/users', (req, res) => {
-    // const newUser = req.body;
-
-    // if(!newUser.name) {
-    //     const message = 'Missing name in body request.';
-    //     res.status(400).send(message);
-    // } else {
-    //     newUser.id = uuid.v4();
-    //     users.push(newUser);
-    //     res.status(201).json(newUser);
-    // }
-
     Users.findOne({Username: req.body.Username})
         .then((user) => {
             if (user) {
@@ -157,7 +89,7 @@ app.post('/users', (req, res) => {
                         Username: req.body.Username,
                         Password: req.body.Password,
                         Email: req.body.Email,
-                        BirthDate: req.body.BirtDate
+                        BirthDate: req.body.BirthDate
                     })
                     .then((user) => {
                         if (user) {
@@ -224,13 +156,6 @@ app.put('/users/:Username/:MovieId', (req, res) => {
             }
         }
     );
-
-    // if (updatedUser) {
-    //     updatedUser.favoriteMovies.push(movieTitle);
-    //     res.status(200).send(`${movieTitle} has been added to favorites from the user ${id}.`)
-    // } else {
-    //     res.status(400).send('no such user found')
-    // }
 });
 
 // 8. endpoint allow user to delete a movie from their favorites list, DELETE
@@ -266,13 +191,6 @@ app.delete('/users/:Username/', (req, res) => {
             console.error(err);
             res.status(500).send('Error: ' + err);
         });
-
-    // if (user) {
-    //     users = users.filter( user => user.id != id);
-    //     res.status(200).send(`User ${id} has been deleted.`)
-    // } else {
-    //     res.status(400).send('no such user found')
-    // }
 });
 
 
