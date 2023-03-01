@@ -197,39 +197,33 @@ app.put('/users/:Username', (req, res) => {
         (err, updatedUser) => {
             if (err) {
                 console.error(err);
-                return res.status(500).send('Error: ' + err);
-            } 
-
-            if (!updatedUser) {
-                return res.status(400).send('No such user found.')
-            } 
-
-            return res.json(updatedUser);
+                res.status(500).send('Error: ' + err);
+            } else if (!updatedUser) {
+                res.status(400).send('No such found.');
+            } else {
+                res.json(updatedUser);
+            }
         }
-    );
-    // if (user) {
-    //     user.name = name;
-    //     res.status(200).json(user);
-    // } else {
-    //     res.status(400).send('No such user found.')
-    // }
+    )
 });
 
 // 7. endpoint allow user to add a favorite movie to their list of favorites, UPDATE
 // UPDATE LATER
-app.put('/users/:Username/:MovieID', (req, res) => {
-    Users.findOneAndUpdate({Username: req.params.Username}, {
-        $push: { FavoriteMovies: req.params.MovieID }
-    },
-    { new: true },
-    (err, updatedUser) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
+app.put('/users/:Username/:MovieId', (req, res) => {
+    console.log('hi')
+    Users.findOneAndUpdate(
+        { Username: req.params.Username }, 
+        { $push: { FavoriteMovies: req.params.MovieId }},
+        { new: true },
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
         }
-    });
+    );
 
     // if (updatedUser) {
     //     updatedUser.favoriteMovies.push(movieTitle);
@@ -240,31 +234,45 @@ app.put('/users/:Username/:MovieID', (req, res) => {
 });
 
 // 8. endpoint allow user to delete a movie from their favorites list, DELETE
-app.delete('/users/:id/movies/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find( user => user.id == id);
-
-    if (user) {
-        user.favoriteMovies = user.favoriteMovies.filter( title => title !== movieTitle);
-        res.status(200).send(`${movieTitle} has been deleted from favorites from the user ${id}.`)
-    } else {
-        res.status(400).send('no such user found')
-    }
+app.delete('/users/:Username/:MovieId', (req, res) => {
+    Users.findOneAndUpdate(
+        { Username: req.params.Username },
+        { $pull: { FavoriteMovies: req.params.MovieId } },
+        { new: true },
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else if (!updatedUser) {
+                res.status(400).send(req.params.Username + ' was not found.');
+            } else {
+                res.json(updatedUser)
+            }
+        }
+        )
 });
 
 // 9. endpoint allow existing users to deregister, DELETE
-app.delete('/users/:id/', (req, res) => {
-    const { id } = req.params;
+app.delete('/users/:Username/', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+        .then((user) => {
+            if (!user) {
+                res.status(400).send(req.params.Username + ' was not found.');
+            } else {
+                res.status(200).send(req.params.Username + ' was deleted.');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 
-    let user = users.find( user => user.id == id);
-
-    if (user) {
-        users = users.filter( user => user.id != id);
-        res.status(200).send(`User ${id} has been deleted.`)
-    } else {
-        res.status(400).send('no such user found')
-    }
+    // if (user) {
+    //     users = users.filter( user => user.id != id);
+    //     res.status(200).send(`User ${id} has been deleted.`)
+    // } else {
+    //     res.status(400).send('no such user found')
+    // }
 });
 
 
