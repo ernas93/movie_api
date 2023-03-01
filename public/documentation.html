@@ -21,7 +21,7 @@
                     <th>URL</th>
                     <th>HTTP Method</th>
                     <th>Query Parameters</th>
-                    <th>Request data format</th>
+                    <th>Request body format</th>
                     <th>Response data format</th>
                 </tr>
             </thead>
@@ -73,36 +73,36 @@
           
                 <tr>
                   <td>Allows users to update users name</td>
-                  <td>/users/:id/name/:name</td>
+                  <td>/users/:Username</td>
                   <td>PUT</td>
-                  <td>:id, :name</td>
-                  <td>-</td>
+                  <td>:Username</td>
+                  <td>A JSON object holding data about the users information</td>
                   <td>A JSON object holding data about the updated user information</td>
                 </tr>
           
                 <tr>
                   <td>Allows users to add a movie to their list of favourite movies</td>
-                  <td>/users/:id/movies/:movieTitle</td>
+                  <td>/users/:Username/:MovieId</td>
                   <td>PUT</td>
-                  <td>:id, :movieTitle</td>
+                  <td>:Username, :MovieId</td>
                   <td>-</td>
                   <td>A JSON object holding data about the user and the movie that was added</td>
                 </tr>
           
                 <tr>
                   <td>Allows users to remove a movie from their list of favourite movies</td>
-                  <td>/users/:id/movies/:movieTitle</td>
+                  <td>/users/:Username/:MovieId</td>
                   <td>DELETE</td>
-                  <td>:id, :movieTitle</td>
+                  <td>:Username, :MovieId</td>
                   <td>-</td>
                   <td>A JSON object holding data about the user and the movie that was removed</td>
                 </tr>
           
                 <tr>
                   <td>Allows existing users to deregister</td>
-                  <td>/users/:id</td>
+                  <td>/users/:Username</td>
                   <td>DELETE</td>
-                  <td>:id</td>
+                  <td>:Username</td>
                   <td>-</td>
                   <td>A text message indicating whether the user has successfully deregistered</td>
                 </tr>
