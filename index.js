@@ -16,6 +16,11 @@ mongoose.connect('mongodb://localhost:27017/movieappdb', {
 
 app.use(bodyParser.json());
 
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
+
 
 // 1. endpoint return all movies; READ
 app.get('/movies', (req, res) => {
