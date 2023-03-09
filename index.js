@@ -23,7 +23,7 @@ require('./passport');
 
 
 // 1. endpoint return all movies; READ
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movies) => {
         res.status(201).json(movies);
@@ -35,7 +35,7 @@ app.get('/movies', (req, res) => {
 });
 
 // 2. endpoint return movie by title; READ
-app.get('/movies/:title', (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ Title: req.params.title})
     .then((movie) => {
         if (movie) {
@@ -51,7 +51,7 @@ app.get('/movies/:title', (req, res) => {
 });
 
 // 3. endpoint get genre by genre name; READ
-app.get('/movies/genre/:genreName', (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({'Genre.Name': req.params.genreName})
     .then((movie) => {
         if (movie) {
@@ -67,7 +67,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
 });
 
 // 4. endpoint director; READ
-app.get('/directors/:directorName', (req, res) => {
+app.get('/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({'Director.Name': req.params.directorName})
     .then((movie) => {
         if (movie) {
@@ -116,7 +116,7 @@ app.post('/users', (req, res) => {
 });
 
 // 6. endpoint update users name, UPDATE
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     if (!req.body.Username) {
         res.status(400).send('Error: missing body params');
     }
@@ -146,7 +146,7 @@ app.put('/users/:Username', (req, res) => {
 
 // 7. endpoint allow user to add a favorite movie to their list of favorites, UPDATE
 // UPDATE LATER
-app.put('/users/:Username/:MovieId', (req, res) => {
+app.put('/users/:Username/:MovieId', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate(
         { Username: req.params.Username }, 
         { $push: { FavoriteMovies: req.params.MovieId }},
@@ -165,7 +165,7 @@ app.put('/users/:Username/:MovieId', (req, res) => {
 });
 
 // 8. endpoint allow user to delete a movie from their favorites list, DELETE
-app.delete('/users/:Username/:MovieId', (req, res) => {
+app.delete('/users/:Username/:MovieId', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate(
         { Username: req.params.Username },
         { $pull: { FavoriteMovies: req.params.MovieId } },
@@ -184,7 +184,7 @@ app.delete('/users/:Username/:MovieId', (req, res) => {
 });
 
 // 9. endpoint allow existing users to deregister, DELETE
-app.delete('/users/:Username/', (req, res) => {
+app.delete('/users/:Username/', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
         .then((user) => {
             if (!user) {
