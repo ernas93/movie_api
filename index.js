@@ -14,6 +14,9 @@ mongoose.connect('mongodb://localhost:27017/movieappdb', {
     useUnifiedTopology: true 
 });
 
+const cors = require('cors');
+app.use(cors());
+
 app.use(bodyParser.json());
 
 let auth = require('./auth')(app);
@@ -84,6 +87,7 @@ app.get('/directors/:directorName', passport.authenticate('jwt', { session: fals
 
 // 5. endpoint add new user, CREATE
 app.post('/users', (req, res) => {
+    let hashPassword = Users.hashPassword(req.body.Password);
     Users.findOne({Username: req.body.Username})
         .then((user) => {
             if (user) {
@@ -92,7 +96,7 @@ app.post('/users', (req, res) => {
                 Users
                     .create({
                         Username: req.body.Username,
-                        Password: req.body.Password,
+                        Password: hashPassword,
                         Email: req.body.Email,
                         BirthDate: req.body.BirthDate
                     })
