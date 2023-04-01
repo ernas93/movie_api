@@ -10,7 +10,7 @@ endpoint:**
 
 /movies/:title
 
-**3. return movies by genre READ
+**3. return genre by genre name READ
 endpoint:**
 
 /movies/genre/:genreName
@@ -28,19 +28,19 @@ endpoint:**
 **6. allow users to update their user name UPDATE
 endpoint:**
 
-/users/:id/name/:name
+/users/:Username
 
 **7. allow users to add a movie to their list of favorites UPDATE/CREATE
 endpoint:**
 
-/users/:id/movies/:movieTitle
+/users/:Username/:MovieId
 
 **8. allow users to remove a movie from their list of favorites DELETE
 endpoint:**
 
-/users/:id/movies/:movieTitle
+/users/:Username/:MovieId
 
 **9. allow existing user to deregister DELETE
 endpoint:**
 
-/users/:id
+/users/:Username
