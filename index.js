@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const { send } = require('express/lib/response');
 const { check, validationResult } = require('express-validator');
+require('dotenv').config();
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -30,6 +31,10 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+// greating message
+app.get('/', (req, res) => {
+    res.status(200).send('Hello World!');
+});
 
 // 1. endpoint return all movies; READ
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
