@@ -5,14 +5,24 @@ const app = express();
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 const { send } = require('express/lib/response');
+const { check, validationResult } = require('express-validator');
+require('dotenv').config();
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/movieappdb', {
+// mongoose.connect('mongodb://localhost:27017/movieappdb', {
+//     useNewUrlParser: true, 
+//     useUnifiedTopology: true 
+// });
+
+mongoose.connect( process.env.CONNECTION_URI, {
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
+
+const cors = require('cors');
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -21,6 +31,10 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+// greeting message
+app.get('/', (req, res) => {
+    res.status(200).send('Hello World!');
+});
 
 // 1. endpoint return all movies; READ
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -83,7 +97,21 @@ app.get('/directors/:directorName', passport.authenticate('jwt', { session: fals
 });
 
 // 5. endpoint add new user, CREATE
-app.post('/users', (req, res) => {
+app.post('/users', 
+[
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+    check('Password', 'Password is required').notEmpty(),
+    check('Email', 'Email does not appear to be valid.').isEmail(),
+], (req, res) => {
+    // check for validation errors
+    let errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashPassword = Users.hashPassword(req.body.Password);
     Users.findOne({Username: req.body.Username})
         .then((user) => {
             if (user) {
@@ -92,7 +120,7 @@ app.post('/users', (req, res) => {
                 Users
                     .create({
                         Username: req.body.Username,
-                        Password: req.body.Password,
+                        Password: hashPassword,
                         Email: req.body.Email,
                         BirthDate: req.body.BirthDate
                     })
@@ -115,17 +143,27 @@ app.post('/users', (req, res) => {
         })
 });
 
-// 6. endpoint update users name, UPDATE
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    if (!req.body.Username) {
-        res.status(400).send('Error: missing body params');
+// 6. endpoint update users information, UPDATE
+app.put('/users/:Username', 
+[
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+    check('Password', 'Password is required').notEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+], passport.authenticate('jwt', { session: false }), (req, res) => {
+    //check for validation errors
+    let errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
     }
     
+    let hashPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate({ Username: req.params.Username }, 
         {
             $set: {
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashPassword,
                 Email: req.body.Email,
                 BirthDate: req.body.BirthDate
             }
@@ -145,7 +183,6 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 });
 
 // 7. endpoint allow user to add a favorite movie to their list of favorites, UPDATE
-// UPDATE LATER
 app.put('/users/:Username/:MovieId', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate(
         { Username: req.params.Username }, 
@@ -199,7 +236,7 @@ app.delete('/users/:Username/', passport.authenticate('jwt', { session: false })
         });
 });
 
-
-app.listen(8080, () =>{
-    console.log('listening on port 8080');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () =>{
+    console.log('Listening on port: ' + port)
 });
