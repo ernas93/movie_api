@@ -29,6 +29,7 @@ app.use(bodyParser.json());
 let auth = require('./auth')(app);
 
 const passport = require('passport');
+const { session } = require('passport');
 require('./passport');
 
 // greeting message
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
 });
 
 // 1. endpoint return all movies; READ
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false}), (req, res) => {
     Movies.find()
     .then((movies) => {
         res.status(201).json(movies);
